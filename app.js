@@ -1,15 +1,7 @@
-const { truncate } = require('fs')
 const inquirer = require('inquirer')
-// const fs = require('fs')
-// const generatePage = require('./src/page-template.js')
 
-// const pageHTML = generatePage(name, github)
-
-// fs.writeFile('index.html', generatePage(name, github), err => {
-//     if (err) throw err;
-
-//     console.log('portfolio complete! Check out index.html to see the output!')
-// })
+const generatePage = require('./src/page-template.js')
+const { writeFile, copyFile } = require('./utils/generate-site.js')
 
 const promptUser = () => {
     return inquirer.prompt ([
@@ -133,5 +125,18 @@ const promptUser = () => {
 promptUser()
     .then(promptProject)
     .then(portfolioData => {
-        console.log(portfolioData)
+        return generatePage(portfolioData)
+    })
+    .then(pageHTML => {
+        return writeFile(pageHTML)
+    })
+    .then(writeFileResponse => {
+        console.log(writeFileResponse)
+        return copyFile()
+    })
+    .then(copyFileResponse => {
+        console.log(copyFileResponse)
+    })
+    .catch(err => {
+        console.log(err)
     })
